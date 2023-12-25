@@ -21,7 +21,7 @@ export async function sendMail({
     refresh_token: process.env.HAPPYFOX_GOOGLE_REFRESH_TOKEN,
   });
 
-  const accessToken = oauth2Client.getAccessToken();
+  const accessToken = await oauth2Client.getAccessToken();
 
   const smtpTransport = nodemailer.createTransport({
     service: "gmail",

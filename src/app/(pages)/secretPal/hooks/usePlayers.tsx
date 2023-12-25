@@ -24,11 +24,8 @@ export const usePlayers = () => {
   };
 
   const handleSubmit = async () => {
-    if (await shuffle(players)) {
-      alert("All mails has been sented correctly");
-    } else {
-      alert("Error");
-    }
+    const result = await shuffle(players);
+    console.log(result);
   };
 
   return {

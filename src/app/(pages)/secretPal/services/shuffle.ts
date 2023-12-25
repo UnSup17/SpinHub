@@ -62,8 +62,7 @@ async function shuffle(players: PlayerModel) {
     await sendMails(players, shuffledPlayers);
     return true
   } catch (error) {
-    console.log(error)
-    return false;
+    return error;
   }
 }
 
