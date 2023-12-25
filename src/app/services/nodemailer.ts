@@ -45,9 +45,10 @@ export async function sendMail(mails: {
       console.log(result)
       response.push(result);
     })
-    smtpTransport.close();
     return response;
   } catch (error: any) {
     return error;
+  } finally {
+    smtpTransport.close();
   }
 }
