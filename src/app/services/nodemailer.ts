@@ -32,7 +32,21 @@ export async function sendMail(mails: {
   } as any);
 
   try {
+
+    await new Promise((resolve, reject) => {
+      smtpTransport.verify(function (error, success) {
+        if (error) {
+          console.log(error);
+          reject(error);
+        } else {
+          console.log("Server is ready to take our messages");
+          resolve(success);
+        }
+      });
+    });
+
     const response: any = []
+
     mails.forEach(async (mail) => {
       const mailOptions = {
         from: process.env.HAPPYFOX_GOOGLE_ADDRESS,
@@ -41,10 +55,21 @@ export async function sendMail(mails: {
         generateTextFromHTML: true,
         html: mail.optText,
       };
-      const result = await smtpTransport.sendMail(mailOptions);
-      console.log(result)
-      response.push(result);
+      await new Promise((resolve, reject) => {
+        smtpTransport.sendMail(mailOptions, (err, info) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            console.log(info);
+            response.push(info);
+            resolve(info);
+          }
+        });
+      })
     })
+
+    console.log(response);
     return response;
   } catch (error: any) {
     return error;
