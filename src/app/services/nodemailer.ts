@@ -20,7 +20,9 @@ export async function sendMail(mails: {
   const accessToken = await oauth2Client.getAccessToken();
 
   const smtpTransport = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: {
       type: "OAuth2",
       user: process.env.HAPPYFOX_GOOGLE_ADDRESS,
