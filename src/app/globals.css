@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+* {
+  box-sizing: content-box;
+}
+
+.neup {
+  border-radius: 30px;
+  background: linear-gradient(145deg, #f0f0f0, #ececec);
+  box-shadow: 16px 16px 32px #c6c6c6, -16px -16px 32px #ffffff;
+}
