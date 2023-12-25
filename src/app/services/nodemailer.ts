@@ -2,15 +2,11 @@ import nodemailer from "nodemailer";
 import { google } from "googleapis";
 const OAuth2 = google.auth.OAuth2;
 
-export async function sendMail({
-  subject,
-  toEmail,
-  optText,
-}: {
+export async function sendMail(mails: {
   subject: string;
   toEmail: string;
   optText: string;
-}) {
+}[]) {
   const oauth2Client = new OAuth2({
     clientId: process.env.HAPPYFOX_GOOGLE_CLIENT_ID,
     clientSecret: process.env.HAPPYFOX_GOOGLE_CLIENT_SECRET,
@@ -35,19 +31,23 @@ export async function sendMail({
     },
   } as any);
 
-  const mailOptions = {
-    from: process.env.HAPPYFOX_GMAIL_ADDRESS,
-    to: toEmail,
-    subject: subject,
-    generateTextFromHTML: true,
-    html: optText,
-  };
-
   try {
-    const response = await smtpTransport.sendMail(mailOptions);
+    const response: any = []
+    mails.forEach(async (mail) => {
+      const mailOptions = {
+        from: process.env.HAPPYFOX_GOOGLE_ADDRESS,
+        to: mail.toEmail,
+        subject: mail.subject,
+        generateTextFromHTML: true,
+        html: mail.optText,
+      };
+      const result = await smtpTransport.sendMail(mailOptions);
+      console.log(result)
+      response.push(result);
+    })
     smtpTransport.close();
-    return true;
+    return response;
   } catch (error: any) {
-    throw new Error(error);
+    return error;
   }
 }

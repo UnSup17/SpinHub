@@ -31,8 +31,9 @@ const shuffleArray = (array: PlayerList[]) => {
 };
 
 const sendMails = async (players: PlayerModel, shuffleList: PlayerList[]) => {
+  const mails: { subject: string; toEmail: string; optText: string; }[] = []
   shuffleList.forEach(async (player, index) => {
-    await sendMail({
+    mails.push({
       toEmail: players.players[index].email,
       subject: "Secret Pal",
       optText: NewAssignationMail({
@@ -43,10 +44,12 @@ const sendMails = async (players: PlayerModel, shuffleList: PlayerList[]) => {
         name: players.players[index].name,
         pal: player.name,
         color: players.players[index].color,
-      }),
+      })
     });
   });
+  const response = await sendMail(mails)
 
+  return response;
 }
 
 async function shuffle(players: PlayerModel) {
@@ -59,9 +62,11 @@ async function shuffle(players: PlayerModel) {
   } while (!playableList);
 
   try {
-    await sendMails(players, shuffledPlayers);
-    return true
+    const response = await sendMails(players, shuffledPlayers);
+    console.log("All ok:", response)
+    return response
   } catch (error) {
+    console.log("Error:", error)
     return error;
   }
 }
